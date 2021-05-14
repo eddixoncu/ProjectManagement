@@ -38,8 +38,6 @@ namespace PM_SLABCODE.Context
             {
                 entity.ToTable("RefreshToken");
 
-                entity.Property(e => e.RefreshTokenId).ValueGeneratedNever();
-
                 entity.Property(e => e.CreationDate).HasColumnType("datetime");
 
                 entity.Property(e => e.ExpiryDate).HasColumnType("date");
