@@ -27,5 +27,13 @@ namespace PM_SLABCODE.Controllers
             var result = await _identityService.LoginAsync(loginModel);
             return Ok(result);
         }
+
+        [Route("refresh")]
+        [HttpPost]
+        public async Task<IActionResult> Refresh([FromBody] TokenModel request)
+        {
+            var result = await _identityService.RefreshTokenAsync(request);
+            return Ok(result);
+        }
     }
 }

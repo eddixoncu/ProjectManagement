@@ -15,6 +15,7 @@ namespace PM_SLABCODE.Services
     public interface IIdentityService
     {
         Task<ResponseModel<TokenModel>> LoginAsync(LoginModel login);
+        Task<ResponseModel<TokenModel>> RefreshTokenAsync(TokenModel request);
     }
 
     public class IdentityService : IIdentityService
