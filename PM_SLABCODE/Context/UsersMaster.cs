@@ -9,6 +9,7 @@ namespace PM_SLABCODE.Context
     {
         public UsersMaster()
         {
+            RefreshTokens = new HashSet<RefreshToken>();
             UserRoles = new HashSet<UserRole>();
         }
 
@@ -22,6 +23,7 @@ namespace PM_SLABCODE.Context
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
 
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }

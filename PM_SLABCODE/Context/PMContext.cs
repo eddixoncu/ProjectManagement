@@ -36,9 +36,9 @@ namespace PM_SLABCODE.Context
 
             modelBuilder.Entity<RefreshToken>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("RefreshToken");
+
+                entity.Property(e => e.RefreshTokenId).ValueGeneratedNever();
 
                 entity.Property(e => e.CreationDate).HasColumnType("datetime");
 
@@ -53,7 +53,7 @@ namespace PM_SLABCODE.Context
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.User)
-                    .WithMany()
+                    .WithMany(p => p.RefreshTokens)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK_RefreshToken_UsersMaster");
             });
@@ -99,7 +99,7 @@ namespace PM_SLABCODE.Context
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(20)
+                    .HasMaxLength(40)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FirstName)
