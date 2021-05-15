@@ -11,7 +11,7 @@ namespace PM_SLABCODE.Models
         public string RefreshToken { get; set; }
     }
 
-    public class AuthenticationResult : TokenModel
+    public class AuthenticationResultModel : TokenModel
     {
         public bool Success { get; set; }
         public IEnumerable<string> Errors { get; set; }

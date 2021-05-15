@@ -49,7 +49,7 @@ namespace PM_SLABCODE.Services
                 }
 
 
-                AuthenticationResult authenticationResult = await AuthenticateAsync(loginUser);
+                AuthenticationResultModel authenticationResult = await AuthenticateAsync(loginUser);
                 if (authenticationResult != null && authenticationResult.Success)
                 {
                     response.Data = new TokenModel() { Token = authenticationResult.Token, RefreshToken = authenticationResult.RefreshToken };
@@ -88,10 +88,10 @@ namespace PM_SLABCODE.Services
             }
         }
 
-        public async Task<AuthenticationResult> AuthenticateAsync(UsersMaster user)
+        public async Task<AuthenticationResultModel> AuthenticateAsync(UsersMaster user)
         {
             // authentication successful so generate jwt token
-            AuthenticationResult authenticationResult = new AuthenticationResult();
+            AuthenticationResultModel authenticationResult = new AuthenticationResultModel();
             var tokenHandler = new JwtSecurityTokenHandler();
 
             try
@@ -173,13 +173,13 @@ namespace PM_SLABCODE.Services
             }
         }
 
-        private async Task<AuthenticationResult> GetRefreshTokenAsync(string token, string refreshToken)
+        private async Task<AuthenticationResultModel> GetRefreshTokenAsync(string token, string refreshToken)
         {
             var validatedToken = GetPrincipalFromToken(token);
 
             if (validatedToken == null)
             {
-                return new AuthenticationResult { Errors = new[] { "Invalid Token" } };
+                return new AuthenticationResultModel { Errors = new[] { "Invalid Token" } };
             }
 
             var expiryDateUnix =
@@ -190,7 +190,7 @@ namespace PM_SLABCODE.Services
 
             if (expiryDateTimeUtc > DateTime.UtcNow)
             {
-                return new AuthenticationResult { Errors = new[] { "This token hasn't expired yet" } };
+                return new AuthenticationResultModel { Errors = new[] { "This token hasn't expired yet" } };
             }
 
             var jti = validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
@@ -199,22 +199,22 @@ namespace PM_SLABCODE.Services
 
             if (storedRefreshToken == null)
             {
-                return new AuthenticationResult { Errors = new[] { "This refresh token does not exist" } };
+                return new AuthenticationResultModel { Errors = new[] { "This refresh token does not exist" } };
             }
 
             if (DateTime.UtcNow > storedRefreshToken.ExpiryDate)
             {
-                return new AuthenticationResult { Errors = new[] { "This refresh token has expired" } };
+                return new AuthenticationResultModel { Errors = new[] { "This refresh token has expired" } };
             }
 
             if (storedRefreshToken.Used.HasValue && storedRefreshToken.Used == true)
             {
-                return new AuthenticationResult { Errors = new[] { "This refresh token has been used" } };
+                return new AuthenticationResultModel { Errors = new[] { "This refresh token has been used" } };
             }
 
             if (storedRefreshToken.JwtId != jti)
             {
-                return new AuthenticationResult { Errors = new[] { "This refresh token does not match this JWT" } };
+                return new AuthenticationResultModel { Errors = new[] { "This refresh token does not match this JWT" } };
             }
 
             storedRefreshToken.Used = true;
@@ -226,7 +226,7 @@ namespace PM_SLABCODE.Services
             var user = _context.UsersMasters.FirstOrDefault(c => c.UserId == userId);
             if (user == null)
             {
-                return new AuthenticationResult { Errors = new[] { "User Not Found" } };
+                return new AuthenticationResultModel { Errors = new[] { "User Not Found" } };
             }
 
             return await AuthenticateAsync(user);
